@@ -1,0 +1,1 @@
+npx dtp-cli deploy --dry-run

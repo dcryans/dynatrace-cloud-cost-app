@@ -1,0 +1,53 @@
+{
+  "name": "my.cloud.cost.app",
+  "version": "0.0.6",
+  "scripts": {
+    "build": "dt-app build --prod",
+    "start": "dt-app dev",
+    "generate:function": "dt-app generate function",
+    "uninstall": "dt-app uninstall",
+    "deploy": "dt-app deploy",
+    "update": "dt-app update",
+    "info": "dt-app info",
+    "help": "dt-app help",
+    "lint": "eslint ."
+  },
+  "engines": {
+    "node": ">=16.13.0"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@dynatrace-sdk/app-environment": "1.0.1",
+    "@dynatrace-sdk/app-utils": "^0.2.2",
+    "@dynatrace-sdk/client-classic-environment-v2": "1.2.4",
+    "@dynatrace-sdk/client-query": "1.4.1",
+    "@dynatrace-sdk/error-handlers": "1.1.1",
+    "@dynatrace-sdk/navigation": "1.0.1",
+    "@dynatrace-sdk/user-preferences": "1.0.1",
+    "@dynatrace/strato-components-preview": "0.101.2",
+    "lodash": "^4.17.21",
+    "react": "^17.0.0",
+    "react-dom": "^17.0.0",
+    "react-markdown": "^8.0.7",
+    "react-router-dom": "^6.4.1",
+    "showdown": "^2.1.0",
+    "styled-components": "^6.0.1",
+    "react-intl": "6.0.8"
+  },
+  "devDependencies": {
+    "@types/node": "^16.11.34",
+    "@types/react": "^17.0.0",
+    "@types/react-dom": "^17.0.0",
+    "@types/showdown": "^2.0.1",
+    "@typescript-eslint/eslint-plugin": "^5.23.0",
+    "@typescript-eslint/parser": "^5.23.0",
+    "dt-app": "0.103.0",
+    "eslint": "^8.15.0",
+    "eslint-plugin-react": "^7.29.4",
+    "eslint-plugin-react-hooks": "^4.5.0",
+    "@testing-library/react": "^12.0.0",
+    "@testing-library/user-event": "^13.1.8",
+    "react-is": "^17.0.2"
+  }
+}
