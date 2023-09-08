@@ -8,7 +8,7 @@ interface ResultTableProps {
 
 export function ResultTable({ result }: ResultTableProps) {
   const tableComponent = useMemo(() => {
-    if (result) {
+    if (result && result.length > 0 && result[0]) {
       const headers: TableColumn[] = [];
       for (const key of Object.keys(result[0])) {
         headers.push({

@@ -69,7 +69,7 @@ export function CloudFilterBar({
       </FilterBar>
       <GetRecordsFromDQL
         query={cloudTypeQuery}
-        label="cloud tyoes"
+        label="cloud types"
         setRecords={setCloudTypes}
         firstPropertyOnly={true}
       />

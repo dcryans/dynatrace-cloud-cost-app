@@ -30,10 +30,12 @@ export function GetRecordsFromDQL({
   });
 
   useEffect(() => {
+    if (data === undefined) {
+      return;
+    }
+    let results: any = [];
     if (data?.records && data.records.length > 0 && data.records[0]) {
-      let results: any = undefined;
       if (singlePropertyOnly) {
-        results = [];
         const key = Object.keys(data.records[0])[0];
         for (const record of data.records) {
           if (record) {
@@ -48,9 +50,9 @@ export function GetRecordsFromDQL({
       } else {
         results = data.records;
       }
-      setRecords(results);
     }
-  }, [setRecords, data, singlePropertyOnly]);
+    setRecords(results);
+  }, [data, singlePropertyOnly]);
 
   useEffect(() => {
     if (error) {

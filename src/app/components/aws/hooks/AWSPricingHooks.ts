@@ -8,6 +8,7 @@ import {
 } from "@dynatrace-sdk/react-hooks";
 import { AsyncStateStatus } from "@dynatrace-sdk/react-hooks/types/packages/util/react-hooks/src/lib/react-async-hook/react-async-hook";
 import { StatusInfo } from "../Status";
+import { AWS_HOST } from "../../../../../api/get-aws-pricing";
 
 const AWSDocumentType = "AWSPricing";
 
@@ -106,7 +107,7 @@ export const useStatusInfo = (
     if (status === "loading") {
       statusMessage = `${label} ${statusSuffix}`;
     } else if (status === "error") {
-      statusMessage = `Failed: ${label} ${statusSuffix}`;
+      statusMessage = `Failed ${label} ${statusSuffix}`;
     }
     return { status, statusMessage };
   }, [status, label, statusSuffixes]);
@@ -136,6 +137,7 @@ export const useAWSPricingGet = (
     "Retriving pricing from AWS",
     {
       loading: "(Please don't refresh, estimated 30s)",
+      error: `You probably need to add "${AWS_HOST}" in Settings -> Preferences -> Limit outbound connections -> Allow-list`,
     }
   );
 
@@ -275,6 +277,7 @@ export const useAWSPricingDocumentGet = (id: string, setInstanceTypes: any) => {
   useEffect(() => {
     if (data?.content) {
       data?.content.get("json").then((json) => {
+        console.log("AAA", json)
         setInstanceTypes(json);
       });
     }

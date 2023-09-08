@@ -13,8 +13,8 @@ export default async function (payload: { region: string }) {
     records: awsPricing,
   };
 }
-
-const AWS_PRICING_URL_PREFIX = "https://pricing.us-east-1.amazonaws.com";
+export const AWS_HOST = `pricing.us-east-1.amazonaws.com`;
+const AWS_PRICING_URL_PREFIX = `https://${AWS_HOST}`;
 
 const AWS_REGION_INDEX_URL =
   "/offers/v1.0/aws/AmazonEC2/current/region_index.json";
@@ -166,10 +166,10 @@ async function getAWSPricing(region: string) {
         }
       }
 
+      /*
       if (chunkCount % 1000 == 0) {
         console.log(chunkCount, lineCountTotal);
       }
-      /*
       if (chunkCount >= 1) {
         console.log(rows);
         this.done();
