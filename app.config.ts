@@ -1,11 +1,12 @@
 import type { CliOptions } from "dt-app";
+import packageJSON from "./package.json";
 
 const config: CliOptions = {
   environmentUrl: "https://egu21862.apps.dynatrace.com/",
   icon: "./src/assets/icon.png",
   app: {
     name: "Cloud Cost App",
-    version: "0.0.6",
+    version: packageJSON.version,
     description:
       "App that delivers information on an environemnt's cloud costs.",
     id: "my.cloud.cost.app",
@@ -14,6 +15,8 @@ const config: CliOptions = {
       { name: "storage:buckets:read", comment: "default template" },
       { name: "storage:metrics:read", comment: "default template" },
       { name: "storage:entities:read", comment: "default template" },
+      { name: "document:documents:write", comment: "Create Documents" },
+      { name: "document:documents:read", comment: "Read Documents" },
       {
         name: "environment-api:entities:read",
         comment: "get entities from tenant",
