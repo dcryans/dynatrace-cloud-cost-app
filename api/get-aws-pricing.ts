@@ -13,8 +13,7 @@ export default async function (payload: { region: string }) {
     records: awsPricing,
   };
 }
-export const AWS_HOST = `pricing.us-east-1.amazonaws.com`;
-const AWS_PRICING_URL_PREFIX = `https://${AWS_HOST}`;
+export const AWS_PRICING_URL_PREFIX = `https://pricing.us-east-1.amazonaws.com`;
 
 const AWS_REGION_INDEX_URL =
   "/offers/v1.0/aws/AmazonEC2/current/region_index.json";

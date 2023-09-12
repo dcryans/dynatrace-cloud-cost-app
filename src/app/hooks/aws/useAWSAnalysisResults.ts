@@ -58,6 +58,7 @@ export const useAWSAnalysisResults = (
     // Loop iterates through each server from DQL for the overall stats
     for (const server of servers) {
       const {
+        hostId,
         CPU: cpu,
         Mem: memory,
         CPUUsage,
@@ -141,6 +142,7 @@ export const useAWSAnalysisResults = (
 
       //Get full result set
       analysisResult.utili_results.push({
+        HostId: hostId,
         Host: host,
         OS: os,
         CPU: cpu,
@@ -161,7 +163,12 @@ export const useAWSAnalysisResults = (
     const formattedSum = new Intl.NumberFormat("en-US", {
       style: "currency",
       currency: "USD",
-    }).format(applyDiscountPct(sumPriceDirect * 8740 - sumPriceWithUtil * 8740, discountPct));
+    }).format(
+      applyDiscountPct(
+        sumPriceDirect * 8740 - sumPriceWithUtil * 8740,
+        discountPct
+      )
+    );
 
     const formattedSumDirect = new Intl.NumberFormat("en-US", {
       style: "currency",

@@ -8,7 +8,7 @@ import {
 } from "@dynatrace-sdk/react-hooks";
 import { AsyncStateStatus } from "@dynatrace-sdk/react-hooks/types/packages/util/react-hooks/src/lib/react-async-hook/react-async-hook";
 import { StatusInfo } from "../Status";
-import { AWS_HOST } from "../../../../../api/get-aws-pricing";
+import { AWS_PRICING_URL_PREFIX } from "../../../../../api/get-aws-pricing";
 
 const AWSDocumentType = "AWSPricing";
 
@@ -25,7 +25,7 @@ export const useAWSPricingDocumentListGet = (region: string) => {
   });
   useMemo(() => {
     let doFetch = false;
-    if (mostRecentDocumentId! !== "") {
+    if (mostRecentDocumentId !== "") {
       setMostRecentDocumentId("");
       doFetch = true;
     }
@@ -137,7 +137,9 @@ export const useAWSPricingGet = (
     "Retriving pricing from AWS",
     {
       loading: "(Please don't refresh, estimated 30s)",
-      error: `You probably need to add "${AWS_HOST}" in Settings -> Preferences -> Limit outbound connections -> Allow-list`,
+      error: `You probably need to add "${
+        new URL(AWS_PRICING_URL_PREFIX).hostname
+      }" in Settings -> Preferences -> Limit outbound connections -> Allow-list`,
     }
   );
 

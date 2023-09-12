@@ -8,6 +8,7 @@ import {
 } from "@dynatrace/strato-components-preview";
 import type { TableColumn } from "@dynatrace/strato-components-preview/tables";
 import { useEffectDebounced } from "../../hooks/useEffectDebounced";
+import { getEnvironmentUrl } from "@dynatrace-sdk/app-environment";
 
 interface ResultTableProps {
   result: any[];
@@ -35,26 +36,45 @@ export function ResultTable({ result }: ResultTableProps) {
     [result]
   );
 
+  const hostCellFunction = useMemo(() => {
+    const envUrl = getEnvironmentUrl();
+
+    const hostCellFunc = ({ value, row }: { value: string; row: any }) => {
+      let styledComponent: React.JSX.Element = <>{value}</>;
+      if (searchText !== "") {
+        styledComponent = <Highlight term={searchText}>{value}</Highlight>;
+      }
+      return (
+        <a
+          href={getHostHRef(envUrl, row)}
+          target="_blank"
+          rel=" noopener noreferrer"
+        >
+          {styledComponent}
+        </a>
+      );
+    };
+
+    return hostCellFunc;
+  }, [searchText]);
+
   const headers = useMemo(() => {
     if (result && result.length > 0 && result[0]) {
       const headers: TableColumn[] = [];
       for (const [key, value] of Object.entries(result[0])) {
+        if (key === "HostId") {
+          continue;
+        }
         const header: TableColumn = {
           accessor: key,
-          autoWidth: true,
           alignment: "right",
         };
         if (typeof value == "number") {
           header.columnType = "number";
         }
         if (key === "Host") {
-          header.cell = ({ value, row }: { value: string; row: any }) => {
-            if (searchText === "") {
-              return value;
-            } else {
-              return <Highlight term={searchText}>{value}</Highlight>;
-            }
-          };
+          header.cell = hostCellFunction;
+          header.minWidth = 400;
         }
         headers.push(header);
       }
@@ -63,7 +83,7 @@ export function ResultTable({ result }: ResultTableProps) {
     } else {
       return null;
     }
-  }, [result, searchText]);
+  }, [result, hostCellFunction]);
 
   const filteredResult = useMemo<any[]>(() => {
     if (searchText === "") {
@@ -92,6 +112,7 @@ export function ResultTable({ result }: ResultTableProps) {
           columns={headers}
           data={filteredResult}
           sortable={isMultipleRows}
+          resizable
         />
       )}
     </Fragment>
@@ -101,3 +122,7 @@ export function ResultTable({ result }: ResultTableProps) {
 function containsSearchText(value: string, searchText: string) {
   return value.toLowerCase().includes(searchText.toLowerCase());
 }
+
+const getHostHRef = (envUrl: string, row: any): string => {
+  return `${envUrl}/ui/apps/dynatrace.classic.hosts/ui/entity/${row.original.HostId}`;
+};
