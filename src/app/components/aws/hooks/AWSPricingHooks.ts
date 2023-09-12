@@ -277,7 +277,6 @@ export const useAWSPricingDocumentGet = (id: string, setInstanceTypes: any) => {
   useEffect(() => {
     if (data?.content) {
       data?.content.get("json").then((json) => {
-        console.log("AAA", json)
         setInstanceTypes(json);
       });
     }

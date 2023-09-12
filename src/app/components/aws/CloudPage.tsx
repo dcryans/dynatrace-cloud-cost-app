@@ -6,6 +6,7 @@ import { GetRecordsFromDQL } from "./GetRecordsFromDQL";
 import {
   CloudFilterBar,
   DEFAULT_CLOUD_TYPE,
+  DEFAULT_DISCOUNT_PCT,
   DEFAULT_TARGET_UTIL,
 } from "./CloudFilterBar";
 import { getServerListQuery } from "./queries/CloudQueries";
@@ -17,6 +18,8 @@ export function CloudPage() {
   const [cloudType, setCloudType] = useState<string | undefined>(
     DEFAULT_CLOUD_TYPE
   );
+  const [discountPct, setDiscountPct] = useState(DEFAULT_DISCOUNT_PCT);
+
   const [instanceTypes, setInstanceTypes] = useState<any | undefined>(
     undefined
   );
@@ -24,7 +27,8 @@ export function CloudPage() {
     servers,
     instanceTypes,
     region,
-    targetUtil
+    targetUtil,
+    discountPct,
   );
   const handleSetRegion = useCallback(
     (newValue: string[], firstCall = false) => {
@@ -57,6 +61,13 @@ export function CloudPage() {
     [setCloudType]
   );
 
+  const handleSetDiscountPct = useCallback(
+    (newValue: number) => {
+      setDiscountPct(newValue);
+    },
+    [setDiscountPct]
+  );
+
   return (
     <Fragment>
       <CloudFilterBar
@@ -64,6 +75,7 @@ export function CloudPage() {
         handleSetRegion={handleSetRegion}
         handleSetTargetUtil={handleSetTargetUtil}
         handleSetCloudType={handleSetCloudType}
+        handleSetDiscountPct={handleSetDiscountPct}
         isLoadingAWSData={instanceTypes == undefined}
       />
       {awsAnalysisResults && (

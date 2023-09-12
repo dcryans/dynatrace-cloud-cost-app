@@ -1,6 +1,6 @@
-import React, { Fragment, useState } from "react";
+import React, { Fragment, useCallback, useState } from "react";
 import { DEFAULT_REGION, GetAWSRegions } from "./GetAWSRegions";
-import { FilterBar } from "@dynatrace/strato-components-preview";
+import { FilterBar, NumberInput } from "@dynatrace/strato-components-preview";
 import { GetRecordsFromDQL } from "./GetRecordsFromDQL";
 import { CloudFilterBarSelect } from "./CloudFilterBarSelect";
 import { cloudTypeQuery } from "./queries/CloudQueries";
@@ -10,10 +10,12 @@ interface AWSFilterBarProps {
   handleSetRegion: any;
   handleSetTargetUtil: any;
   handleSetCloudType: any;
+  handleSetDiscountPct: any;
   isLoadingAWSData: boolean;
 }
 
 export const DEFAULT_TARGET_UTIL = 50;
+export const DEFAULT_DISCOUNT_PCT = 0;
 const TARGET_UTIL_LIST = [50, 60, 75, 80, 85];
 export const DEFAULT_CLOUD_TYPE = undefined;
 
@@ -22,10 +24,29 @@ export function CloudFilterBar({
   handleSetRegion,
   handleSetTargetUtil,
   handleSetCloudType,
+  handleSetDiscountPct,
   isLoadingAWSData,
 }: AWSFilterBarProps) {
   const [regions, setRegions] = useState<string[]>([]);
   const [cloudTypes, setCloudTypes] = useState<string[]>([]);
+  const [discountPctMessage, setDiscountPctMessage] = useState("");
+
+  const handleDiscountPctChanged = useCallback(
+    (newValue: number | null) => {
+      let newValueNumber = newValue;
+      if (newValueNumber == null) {
+        newValueNumber = 0;
+      }
+
+      if (newValueNumber >= 0 && newValueNumber <= 99) {
+        setDiscountPctMessage("");
+        handleSetDiscountPct(newValueNumber);
+      } else {
+        setDiscountPctMessage("Must be 0-99");
+      }
+    },
+    [handleSetDiscountPct, setDiscountPctMessage]
+  );
 
   return (
     <Fragment>
@@ -66,6 +87,16 @@ export function CloudFilterBar({
             />
           </FilterBar.Item>
         )}
+        <FilterBar.Item name="Discount %" label="Discount %" >
+          <NumberInput
+            defaultValue={DEFAULT_DISCOUNT_PCT}
+            onChange={handleDiscountPctChanged}
+            controlState={{
+              state: discountPctMessage == "" ? "valid" : "error",
+              hint: discountPctMessage,
+            }}
+          />
+        </FilterBar.Item>
       </FilterBar>
       <GetRecordsFromDQL
         query={cloudTypeQuery}

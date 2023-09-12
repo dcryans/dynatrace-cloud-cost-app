@@ -25,9 +25,10 @@ const termType = "TermType";
 const unit = "Unit";
 const memory = "Memory";
 const tenancy = "Tenancy";
+const instanceType = "Instance Type";
 
 const wantedConfigs = {
-  "Instance Type": (row, token) => {
+  [instanceType]: (row, token) => {
     row["instanceType"] = token;
   },
   [termType]: (row, token) => {
@@ -191,6 +192,12 @@ async function getAWSPricing(region: string) {
 
 function getConditions(region: string) {
   return {
+    [instanceType]: (token: string) => {
+      if (token.startsWith("T") || token.startsWith("t")) {
+        return false;
+      }
+      return true;
+    },
     [pricePerUnit]: (token: string) => {
       if (token != "" && Number(token) > 0.0) {
         return true;

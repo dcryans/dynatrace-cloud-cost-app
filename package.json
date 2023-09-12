@@ -1,6 +1,6 @@
 {
   "name": "my.cloud.cost.app",
-  "version": "0.1.5",
+  "version": "0.1.7",
   "scripts": {
     "build": "dt-app build --prod",
     "start": "dt-app dev",

@@ -6,7 +6,7 @@ export const PageDataContext = createContext<PageData>({
   setMainTitle: () => {},
   mainSubtitle: "",
   setMainSubtitle: () => {},
-  isSidebarDismissed: false,
+  isSidebarDismissed: true,
   setIsSidebarDismissed: () => {},
 });
 

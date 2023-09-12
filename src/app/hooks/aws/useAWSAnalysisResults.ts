@@ -20,7 +20,8 @@ export const useAWSAnalysisResults = (
   servers: any,
   instanceTypes: any,
   region: string,
-  targetUtilization: number
+  targetUtilization: number,
+  discountPct: number
 ) => {
   const [analysisResult, setAnalysisResult] = useState<
     AnalysisResults | undefined
@@ -148,9 +149,9 @@ export const useAWSAnalysisResults = (
         CPU_Util: cpuU * 100,
         Mem_Util: memU * 100,
         Direct_Instance: matchingInstanceTypeDirect,
-        Direct_price: minCostDirect,
+        Direct_price: applyDiscountPct(minCostDirect, discountPct),
         RSized_Instance: matchingInstanceTypeWithUtil,
-        RSized_Price: minCostWithUtil,
+        RSized_Price: applyDiscountPct(minCostWithUtil, discountPct),
         RSized_VCPU: vcpu_util,
         RSized_VMem: vmem_util,
       });
@@ -160,32 +161,32 @@ export const useAWSAnalysisResults = (
     const formattedSum = new Intl.NumberFormat("en-US", {
       style: "currency",
       currency: "USD",
-    }).format(sumPriceDirect * 8740 - sumPriceWithUtil * 8740);
+    }).format(applyDiscountPct(sumPriceDirect * 8740 - sumPriceWithUtil * 8740, discountPct));
 
     const formattedSumDirect = new Intl.NumberFormat("en-US", {
       style: "currency",
       currency: "USD",
-    }).format(sumPriceDirect * 8740);
+    }).format(applyDiscountPct(sumPriceDirect * 8740, discountPct));
 
     const formattedaws = new Intl.NumberFormat("en-US", {
       style: "currency",
       currency: "USD",
-    }).format(awscostdirect * 8740);
+    }).format(applyDiscountPct(awscostdirect * 8740, discountPct));
 
     const formattedawsutil = new Intl.NumberFormat("en-US", {
       style: "currency",
       currency: "USD",
-    }).format(awscostresize * 8740);
+    }).format(applyDiscountPct(awscostresize * 8740, discountPct));
 
     const formattedonPrem = new Intl.NumberFormat("en-US", {
       style: "currency",
       currency: "USD",
-    }).format(onPremcostdirect * 8740);
+    }).format(applyDiscountPct(onPremcostdirect * 8740, discountPct));
 
     const formattedonPremutil = new Intl.NumberFormat("en-US", {
       style: "currency",
       currency: "USD",
-    }).format(onPremcostresize * 8740);
+    }).format(applyDiscountPct(onPremcostresize * 8740, discountPct));
 
     // Fill in sum results array for returning values
     analysisResult.sum_results.push({
@@ -199,7 +200,11 @@ export const useAWSAnalysisResults = (
       //onPrem_to_AWS_RCost: formattedonPremutil
     });
     setAnalysisResult(analysisResult);
-  }, [servers, instanceTypes, targetUtilization, region]);
+  }, [servers, instanceTypes, targetUtilization, region, discountPct]);
 
   return analysisResult;
+};
+
+const applyDiscountPct = (cost: number, pct: number): number => {
+  return cost * ((100 - pct) / 100);
 };
