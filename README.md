@@ -1,3 +1,6 @@
+
+![Cloud Cost App - 0 1 6](https://github.com/dcryans/dynatrace-cloud-cost-app/assets/14256909/11e98ea6-1710-4987-8a90-296ebbab6342)
+
 # Getting Started with your Dynatrace App
 
 This project was bootstrapped with Dynatrace App Toolkit.
