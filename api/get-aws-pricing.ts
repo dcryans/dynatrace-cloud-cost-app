@@ -25,6 +25,8 @@ const unit = "Unit";
 const memory = "Memory";
 const tenancy = "Tenancy";
 const instanceType = "Instance Type";
+const operatingSystem = "Operating System";
+const vCpu = "vCPU";
 
 const wantedConfigs = {
   [instanceType]: (row, token) => {
@@ -33,16 +35,16 @@ const wantedConfigs = {
   [termType]: (row, token) => {
     row["termType"] = token;
   },
-  Memory: (row, token) => {
+  [memory]: (row, token) => {
     row["memory"] = token.substring(0, token.indexOf(" GiB"));
   },
-  "Operating System": (row, token) => {
+  [operatingSystem]: (row, token) => {
     row["os"] = token;
   },
-  PricePerUnit: (row, token) => {
+  [pricePerUnit]: (row, token) => {
     row["price"] = Number(token);
   },
-  vCPU: (row, token) => {
+  [vCpu]: (row, token) => {
     row["vcpu"] = token;
   },
 };
