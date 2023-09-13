@@ -78,6 +78,9 @@ export function ResultTable({ result }: ResultTableProps) {
         }
         headers.push(header);
       }
+      if (headers.length > 0) {
+        headers[headers.length - 1].alignment = "left";
+      }
 
       return headers;
     } else {

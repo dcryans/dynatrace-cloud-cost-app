@@ -16,12 +16,7 @@ export const App = () => {
     (pageComponent: JSX.Element) => {
       return (
         <Page>
-          <Page.Sidebar
-            dismissed={pageState.isSidebarDismissed}
-            onDismissChange={(state: boolean) =>
-              pageState.setIsSidebarDismissed(state)
-            }
-          >
+          <Page.Sidebar dismissed={pageState.isSidebarDismissed}>
             <NavigationSidebarTitleBar />
             <SidebarContent />
           </Page.Sidebar>

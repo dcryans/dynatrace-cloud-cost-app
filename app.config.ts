@@ -5,14 +5,13 @@ const config: CliOptions = {
   environmentUrl: "https://egu21862.apps.dynatrace.com/",
   icon: "./src/assets/icon.png",
   app: {
-    name: "Cloud Cost App",
+    name: "Rightsize",
     version: packageJSON.version,
     description:
-      "App that delivers information on an environemnt's cloud costs.",
-    id: "my.cloud.cost.app",
+      "Leverage Dynatrace data to rightsize cloud infrastructure and create large scale savings.",
+    id: "my.rightsize",
     scopes: [
-      { name: "storage:logs:read", comment: "default template" },
-      { name: "storage:buckets:read", comment: "default template" },
+      { name: "storage:buckets:read", comment: "needed for every DQL queries" },
       { name: "storage:metrics:read", comment: "default template" },
       { name: "storage:entities:read", comment: "default template" },
       { name: "document:documents:write", comment: "Create Documents" },
@@ -20,18 +19,6 @@ const config: CliOptions = {
       {
         name: "environment-api:entities:read",
         comment: "get entities from tenant",
-      },
-      {
-        name: "settings:objects:read",
-        comment: "get settings objects",
-      },
-      {
-        name: "settings:objects:write",
-        comment: "update settings objects",
-      },
-      {
-        name: "environment-api:api-tokens:write",
-        comment: "Create Installer token",
       },
     ],
   },

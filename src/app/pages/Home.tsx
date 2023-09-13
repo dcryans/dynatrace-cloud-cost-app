@@ -2,7 +2,7 @@ import { Flex } from "@dynatrace/strato-components-preview";
 import React from "react";
 import { CloudPage } from "../components/aws/CloudPage";
 
-export const APP_NAME = "Cloud Cost App";
+export const APP_NAME = "Rightsize";
 
 export const Home = () => {
   return (

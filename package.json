@@ -1,6 +1,6 @@
 {
-  "name": "my.cloud.cost.app",
-  "version": "0.1.7",
+  "name": "my.rightsize",
+  "version": "0.1.8",
   "scripts": {
     "build": "dt-app build --prod",
     "start": "dt-app dev",

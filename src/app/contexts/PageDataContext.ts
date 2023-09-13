@@ -2,7 +2,7 @@ import { createContext, Dispatch, SetStateAction } from "react";
 import { APP_NAME } from "../pages/Home";
 
 export const PageDataContext = createContext<PageData>({
-  mainTitle: `Welcome to ${APP_NAME}`,
+  mainTitle: `${APP_NAME}`,
   setMainTitle: () => {},
   mainSubtitle: "",
   setMainSubtitle: () => {},
