@@ -8,7 +8,7 @@ const config: CliOptions = {
     name: "Rightsize",
     version: packageJSON.version,
     description:
-      "Leverage Dynatrace data to rightsize cloud infrastructure and create large scale savings.",
+      "Rightsize cloud infrastructure and create large scale savings.",
     id: "my.rightsize",
     scopes: [
       { name: "storage:buckets:read", comment: "needed for every DQL queries" },

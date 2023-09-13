@@ -20,7 +20,7 @@ export function ResultTable({ result }: ResultTableProps) {
 
   const handleTextChanged = useCallback(
     (newText: string) => {
-      setSearchTextInput(newText);
+      setSearchTextInput(newText.trim());
     },
     [setSearchTextInput]
   );

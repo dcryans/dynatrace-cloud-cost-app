@@ -18,7 +18,7 @@ import {
   Text,
 } from "@dynatrace/strato-components-preview";
 import { ResultTable } from "./ResultTable";
-import { AnalysisResults } from "../../hooks/aws/useAWSAnalysisResults";
+import { AnalysisResults } from "./hooks/useAWSAnalysisResults";
 
 interface AnalysisResultProps {
   awsAnalysisResults: AnalysisResults;

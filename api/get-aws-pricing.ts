@@ -1,19 +1,68 @@
 // This proxy serverless function is required for some outside-call
-export default async function (payload: { region: string }) {
-  const { region } = payload;
+export default async function (payload?: { region: string }) {
+  let region = "us-east-1";
+  if (payload?.region && payload?.region !== "") {
+    region = payload.region;
+  }
 
   const startDate = new Date();
-  const awsPricing = await getAWSPricing(region);
+  const awsPricing: AWSPricingRecord[] = await getAWSPricing(region);
   const endDate = new Date();
+
+  if (awsPricing == undefined) {
+    return;
+  }
+  const sortedAwsPricing = awsPricing.sort(function (
+    a: AWSPricingRecord,
+    b: AWSPricingRecord
+  ) {
+    if (a.os == b.os) {
+      if (a.vcpu == b.vcpu) {
+        if (a.memory == b.memory) {
+          return a.price - b.price;
+        }
+        return a.memory - b.memory;
+      }
+      return a.vcpu - b.vcpu;
+    }
+    return a.os.localeCompare(b.os);
+  });
+
+  const onlyBestPricing: AWSPricingRecord[] = [];
+
+  if (sortedAwsPricing && sortedAwsPricing.length > 0) {
+    onlyBestPricing.push(sortedAwsPricing[0]);
+    let prev = sortedAwsPricing[0];
+
+    for (const rec of sortedAwsPricing.slice(1)) {
+      if (
+        rec.vcpu === prev.vcpu &&
+        rec.memory === prev.memory &&
+        rec.os == prev.os
+      ) {
+        continue;
+      }
+      onlyBestPricing.push(rec);
+      prev = rec;
+    }
+  }
 
   return {
     runTime: endDate.getTime() - startDate.getTime(),
     startDate: startDate,
     endDate: endDate,
-    records: awsPricing,
+    records: onlyBestPricing,
   };
 }
 export const AWS_PRICING_URL_PREFIX = `https://pricing.us-east-1.amazonaws.com`;
+
+export interface AWSPricingRecord {
+  instanceType: string;
+  memory: number;
+  os: string;
+  price: number;
+  vcpu: number;
+}
 
 const AWS_REGION_INDEX_URL =
   "/offers/v1.0/aws/AmazonEC2/current/region_index.json";
@@ -27,25 +76,24 @@ const tenancy = "Tenancy";
 const instanceType = "Instance Type";
 const operatingSystem = "Operating System";
 const vCpu = "vCPU";
+const preinstalledSoftware = "Pre Installed S/W";
+const capacityStatus = "CapacityStatus";
 
 const wantedConfigs = {
-  [instanceType]: (row, token) => {
-    row["instanceType"] = token;
+  [instanceType]: (row: AWSPricingRecord, token: string) => {
+    row.instanceType = token;
   },
-  [termType]: (row, token) => {
-    row["termType"] = token;
+  [memory]: (row: AWSPricingRecord, token: string) => {
+    row.memory = Number(token.substring(0, token.indexOf(" GiB")));
   },
-  [memory]: (row, token) => {
-    row["memory"] = token.substring(0, token.indexOf(" GiB"));
+  [operatingSystem]: (row: AWSPricingRecord, token: string) => {
+    row.os = token;
   },
-  [operatingSystem]: (row, token) => {
-    row["os"] = token;
+  [pricePerUnit]: (row: AWSPricingRecord, token: string) => {
+    row.price = Number(token);
   },
-  [pricePerUnit]: (row, token) => {
-    row["price"] = Number(token);
-  },
-  [vCpu]: (row, token) => {
-    row["vcpu"] = token;
+  [vCpu]: (row: AWSPricingRecord, token: string) => {
+    row.vcpu = Number(token);
   },
 };
 
@@ -62,8 +110,8 @@ async function getRegionURL(region: string) {
   }
 }
 
-async function getAWSPricing(region: string) {
-  const rows = [];
+async function getAWSPricing(region: string): Promise<AWSPricingRecord[]> {
+  const rows: AWSPricingRecord[] = [];
   const fieldsIndexed = [];
   const wantedIndexed = [];
   const conditionsIndexed = [];
@@ -162,7 +210,7 @@ async function getAWSPricing(region: string) {
             if (Object.keys(row).length == 0 && line.trim() == "") {
               // pass
             } else {
-              rows.push(row);
+              rows.push(row as AWSPricingRecord);
             }
           }
         }
@@ -194,7 +242,11 @@ async function getAWSPricing(region: string) {
 function getConditions(region: string) {
   return {
     [instanceType]: (token: string) => {
-      if (token.startsWith("T") || token.startsWith("t")) {
+      if (
+        token.startsWith("T") ||
+        token.startsWith("t") ||
+        token.endsWith(".metal")
+      ) {
         return false;
       }
       return true;
@@ -219,9 +271,9 @@ function getConditions(region: string) {
     },
     [tenancy]: (token: string) => {
       if (token === "Dedicated") {
-        return false;
+        return true;
       }
-      return true;
+      return false;
     },
     [unit]: (token: string) => {
       if (token === "Hrs") {
@@ -234,6 +286,18 @@ function getConditions(region: string) {
         return false;
       }
       return true;
+    },
+    [preinstalledSoftware]: (token: string) => {
+      if (token === "NA") {
+        return true;
+      }
+      return false;
+    },
+    [capacityStatus]: (token: string) => {
+      if (token === "Used") {
+        return true;
+      }
+      return false;
     },
   };
 }

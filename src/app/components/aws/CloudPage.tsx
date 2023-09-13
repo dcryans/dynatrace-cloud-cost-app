@@ -1,6 +1,6 @@
 import React, { Fragment, useState, useCallback } from "react";
 import { GetInstanceTypes } from "./GetInstanceTypes";
-import { useAWSAnalysisResults } from "../../hooks/aws/useAWSAnalysisResults";
+import { useAWSAnalysisResults } from "./hooks/useAWSAnalysisResults";
 import { AnalysisResult } from "./AnalysisResult";
 import { GetRecordsFromDQL } from "./GetRecordsFromDQL";
 import {
@@ -10,6 +10,7 @@ import {
   DEFAULT_TARGET_UTIL,
 } from "./CloudFilterBar";
 import { getServerListQuery } from "./queries/CloudQueries";
+import { AWSPricingRecord } from "../../../../api/get-aws-pricing";
 
 export function CloudPage() {
   const [servers, setServers] = useState<any | undefined>(undefined);
@@ -20,15 +21,16 @@ export function CloudPage() {
   );
   const [discountPct, setDiscountPct] = useState(DEFAULT_DISCOUNT_PCT);
 
-  const [instanceTypes, setInstanceTypes] = useState<any | undefined>(
-    undefined
-  );
+  const [instanceTypes, setInstanceTypes] = useState<
+    AWSPricingRecord[] | undefined
+  >(undefined);
+
   const awsAnalysisResults = useAWSAnalysisResults(
     servers,
     instanceTypes,
     region,
     targetUtil,
-    discountPct,
+    discountPct
   );
   const handleSetRegion = useCallback(
     (newValue: string[], firstCall = false) => {
