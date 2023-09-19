@@ -4,8 +4,10 @@ import {
   Flex,
   FormField,
   Highlight,
+  Text,
   TextInput,
 } from "@dynatrace/strato-components-preview";
+import Colors from "@dynatrace/strato-design-tokens/colors";
 import type { TableColumn } from "@dynatrace/strato-components-preview/tables";
 import { useEffectDebounced } from "../../hooks/useEffectDebounced";
 import { getEnvironmentUrl } from "@dynatrace-sdk/app-environment";
@@ -76,6 +78,10 @@ export function ResultTable({ result }: ResultTableProps) {
           header.cell = hostCellFunction;
           header.minWidth = 400;
         }
+        if (key === "Savings") {
+          header.cell = savingsCellFunc;
+          header.columnType = "text";
+        }
         headers.push(header);
       }
       if (headers.length > 0) {
@@ -128,4 +134,19 @@ function containsSearchText(value: string, searchText: string) {
 
 const getHostHRef = (envUrl: string, row: any): string => {
   return `${envUrl}/ui/apps/dynatrace.classic.hosts/ui/entity/${row.original.HostId}`;
+};
+
+const savingsCellFunc = ({ value, row }: { value: string; row: any }) => {
+  let color = Colors.Theme.Foreground["10"];
+  let displayValue = Number(Number(value).toPrecision(2)).toString();
+
+  if (Number(value) > 0) {
+    color = Colors.Theme.Success["70"];
+  } else if (Number(value) < 0) {
+    color = Colors.Theme.Critical["70"];
+  } else {
+    displayValue = "-";
+  }
+
+  return <Text style={{ color }}>{displayValue}</Text>;
 };

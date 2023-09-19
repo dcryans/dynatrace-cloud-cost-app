@@ -1,3 +1,9 @@
+import { AWSPricingRecord } from "../src/models/types";
+import {
+  sortOsCpuMemoryPrice,
+  sortOsPrice,
+} from "../src/app/common/sortPricing";
+
 // This proxy serverless function is required for some outside-call
 export default async function (payload?: { region: string }) {
   let region = "us-east-1";
@@ -12,21 +18,9 @@ export default async function (payload?: { region: string }) {
   if (awsPricing == undefined) {
     return;
   }
-  const sortedAwsPricing = awsPricing.sort(function (
-    a: AWSPricingRecord,
-    b: AWSPricingRecord
-  ) {
-    if (a.os == b.os) {
-      if (a.vcpu == b.vcpu) {
-        if (a.memory == b.memory) {
-          return a.price - b.price;
-        }
-        return a.memory - b.memory;
-      }
-      return a.vcpu - b.vcpu;
-    }
-    return a.os.localeCompare(b.os);
-  });
+  const sortedAwsPricing = sortOsCpuMemoryPrice(
+    awsPricing
+  ) as AWSPricingRecord[];
 
   const onlyBestPricing: AWSPricingRecord[] = [];
 
@@ -47,22 +41,81 @@ export default async function (payload?: { region: string }) {
     }
   }
 
+  const priceSortedAwsPricing = sortOsPrice(
+    onlyBestPricing
+  ) as AWSPricingRecord[];
+
+  const minPriceOnlyArray: AWSPricingRecord[] = [];
+  let minPriceCPUPos = {};
+  let minPriceMemoryPos = {};
+  let os = "";
+
+  for (let i = 0; i < priceSortedAwsPricing.length; i++) {
+    const rec = priceSortedAwsPricing[i];
+    if (os !== rec.os) {
+      minPriceCPUPos = {};
+      minPriceMemoryPos = {};
+      os = rec.os;
+    }
+
+    let isTooExpensive = false;
+
+    let cpuPos = -1;
+    for (const [min, minPos] of Object.entries(minPriceCPUPos)) {
+      if (Number(min) >= rec.vcpu && cpuPos < Number(minPos)) {
+        cpuPos = Number(minPos);
+      }
+    }
+
+    let memPos = -1;
+    for (const [min, minPos] of Object.entries(minPriceMemoryPos)) {
+      if (Number(min) >= rec.memory && memPos < Number(minPos)) {
+        memPos = Number(minPos);
+      }
+    }
+
+    if (memPos >= 0 && cpuPos >= 0) {
+      let startPos = memPos;
+      if (cpuPos > startPos) {
+        startPos = cpuPos;
+      }
+
+      for (let j = startPos; j < i; j++) {
+        const prevRec = priceSortedAwsPricing[j];
+        if (prevRec.vcpu >= rec.vcpu && prevRec.memory >= rec.memory) {
+          isTooExpensive = true;
+          break;
+        }
+      }
+    }
+
+    if (isTooExpensive) {
+      continue;
+    }
+
+    if (rec.vcpu in minPriceCPUPos) {
+      // pass
+    } else {
+      minPriceCPUPos[rec.vcpu] = i;
+    }
+
+    if (rec.memory in minPriceMemoryPos) {
+      // pass
+    } else {
+      minPriceMemoryPos[rec.memory] = i;
+    }
+
+    minPriceOnlyArray.push(rec);
+  }
+
   return {
     runTime: endDate.getTime() - startDate.getTime(),
     startDate: startDate,
     endDate: endDate,
-    records: onlyBestPricing,
+    records: minPriceOnlyArray,
   };
 }
 export const AWS_PRICING_URL_PREFIX = `https://pricing.us-east-1.amazonaws.com`;
-
-export interface AWSPricingRecord {
-  instanceType: string;
-  memory: number;
-  os: string;
-  price: number;
-  vcpu: number;
-}
 
 const AWS_REGION_INDEX_URL =
   "/offers/v1.0/aws/AmazonEC2/current/region_index.json";
@@ -298,6 +351,12 @@ function getConditions(region: string) {
         return true;
       }
       return false;
+    },
+    [operatingSystem]: (token: string) => {
+      if (token === "Red Hat Enterprise Linux with HA") {
+        return false;
+      }
+      return true;
     },
   };
 }

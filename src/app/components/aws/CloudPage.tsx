@@ -9,11 +9,10 @@ import {
   DEFAULT_DISCOUNT_PCT,
   DEFAULT_TARGET_UTIL,
 } from "./CloudFilterBar";
-import { getServerListQuery } from "./queries/CloudQueries";
-import { AWSPricingRecord } from "../../../../api/get-aws-pricing";
-
+import { HostInfo, getServerListQuery } from "./queries/CloudQueries";
+import { AWSPricingRecord } from "../../../models/types";
 export function CloudPage() {
-  const [servers, setServers] = useState<any | undefined>(undefined);
+  const [servers, setServers] = useState<HostInfo[] | undefined>(undefined);
   const [region, setRegion] = useState("");
   const [targetUtil, setTargetUtil] = useState(DEFAULT_TARGET_UTIL);
   const [cloudType, setCloudType] = useState<string | undefined>(

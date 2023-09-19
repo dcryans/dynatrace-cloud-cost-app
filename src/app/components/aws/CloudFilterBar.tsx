@@ -14,9 +14,9 @@ interface AWSFilterBarProps {
   isLoadingAWSData: boolean;
 }
 
-export const DEFAULT_TARGET_UTIL = 50;
+export const DEFAULT_TARGET_UTIL = 85;
 export const DEFAULT_DISCOUNT_PCT = 0;
-const TARGET_UTIL_LIST = [50, 60, 75, 80, 85];
+const TARGET_UTIL_LIST = [10, 25, 50, 55, 60, 65, 70, 75, 80, 85, 90, 95, 100];
 export const DEFAULT_CLOUD_TYPE = undefined;
 
 export function CloudFilterBar({
@@ -87,7 +87,7 @@ export function CloudFilterBar({
             />
           </FilterBar.Item>
         )}
-        <FilterBar.Item name="Discount %" label="Discount %" >
+        <FilterBar.Item name="Discount %" label="Discount %">
           <NumberInput
             defaultValue={DEFAULT_DISCOUNT_PCT}
             onChange={handleDiscountPctChanged}

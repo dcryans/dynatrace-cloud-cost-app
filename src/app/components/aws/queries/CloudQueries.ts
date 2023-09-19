@@ -1,18 +1,36 @@
-const nullCloudTypeLabel = "N/A";
+export const nullCloudTypeLabel = "N/A";
 const GCP = "GCP";
 const cloudTypeProperty = "CloudType";
 const gibibyte = 1024 * 1024 * 1024;
+
+export interface HostInfo {
+  hostId: string;
+  os: string;
+  host: string;
+  CPU: number;
+  Mem: number;
+  CloudType: string;
+  CPUUsage: number;
+  MemoryUsage: number;
+  AWSModel: string;
+}
 
 export const getServerListQuery = (cloudType?: string) => {
   return `timeseries avg=avg(dt.host.cpu.usage), by:{dt.entity.host}, interval:5d
 | fieldsAdd CPUUsage=arrayFirst(avg)
 | lookup [timeseries avg2=avg(dt.host.memory.usage), by:{dt.entity.host}, interval:5d
 | fieldsAdd MemoryUsage=arrayFirst(avg2)
-| lookup [fetch dt.entity.host | fields entity.name, id, hosts, hypervisorType,osType, cloudType, cpuCores, physicalMemory], sourceField:dt.entity.host, lookupField:id], sourceField:dt.entity.host, lookupField:dt.entity.host 
-| fields hostId=lookup.lookup.id, host=lookup.lookup.entity.name, os=lookup.lookup.osType,CPU=lookup.lookup.cpuCores, Mem=(toDouble(lookup.lookup.physicalMemory) / ${gibibyte}), MemoryUsage=lookup.MemoryUsage, CPUUsage, ${extractCloudType(
+| lookup [fetch dt.entity.host | fields entity.name, id, hosts, hypervisorType,osType, osVersion, cloudType, cpuCores, physicalMemory, vendor=additionalSystemInfo[system.vendor], model=additionalSystemInfo[system.model]], sourceField:dt.entity.host, lookupField:id], sourceField:dt.entity.host, lookupField:dt.entity.host 
+| fields hostId=lookup.lookup.id, host=lookup.lookup.entity.name, os=lookup.lookup.osType, osVersion=lookup.lookup.osVersion, vendor=lookup.lookup.vendor, model=lookup.lookup.model,CPU=lookup.lookup.cpuCores, Mem=(toDouble(lookup.lookup.physicalMemory) / ${gibibyte}), MemoryUsage=lookup.MemoryUsage, CPUUsage, ${extractCloudType(
     "CloudType",
     "lookup.lookup.cloudType"
   )}
+
+| fieldsAdd osTypeAWS=if(startsWith(osVersion, "Red Hat Enterprise Linux"),"RHEL",else:os)
+| fieldsRemove osVersion, os
+| fieldsRename os=osTypeAWS
+| fieldsAdd AWSModel=if(vendor=="Amazon EC2",model,else:"")
+| fieldsRemove model, vendor
 | filter isNotNull(host)
 ${createFilter(cloudType, cloudTypeProperty)}
 | sort CloudType asc`;
