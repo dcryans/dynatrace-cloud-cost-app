@@ -14,7 +14,7 @@ interface AWSFilterBarProps {
   isLoadingAWSData: boolean;
 }
 
-export const DEFAULT_TARGET_UTIL = 85;
+export const DEFAULT_TARGET_UTIL = 75;
 export const DEFAULT_DISCOUNT_PCT = 0;
 const TARGET_UTIL_LIST = [10, 25, 50, 55, 60, 65, 70, 75, 80, 85, 90, 95, 100];
 export const DEFAULT_CLOUD_TYPE = undefined;
