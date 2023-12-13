@@ -1,6 +1,6 @@
 {
   "name": "my.rightsize",
-  "version": "0.1.13",
+  "version": "0.1.14",
   "scripts": {
     "build": "dt-app build --prod",
     "start": "dt-app dev",

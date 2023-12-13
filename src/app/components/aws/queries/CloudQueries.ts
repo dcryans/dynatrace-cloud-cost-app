@@ -20,8 +20,8 @@ export const getServerListQuery = (cloudType?: string) => {
 | fieldsAdd CPUUsage=arrayFirst(avg)
 | lookup [timeseries avg2=avg(dt.host.memory.usage), by:{dt.entity.host}, interval:5d
 | fieldsAdd MemoryUsage=arrayFirst(avg2)
-| lookup [fetch dt.entity.host | fields entity.name, id, hosts, hypervisorType,osType, osVersion, cloudType, cpuCores, physicalMemory, vendor=additionalSystemInfo[system.vendor], model=additionalSystemInfo[system.model]], sourceField:dt.entity.host, lookupField:id], sourceField:dt.entity.host, lookupField:dt.entity.host 
-| fields hostId=lookup.lookup.id, host=lookup.lookup.entity.name, os=lookup.lookup.osType, osVersion=lookup.lookup.osVersion, vendor=lookup.lookup.vendor, model=lookup.lookup.model,CPU=lookup.lookup.cpuCores, Mem=(toDouble(lookup.lookup.physicalMemory) / ${gibibyte}), MemoryUsage=lookup.MemoryUsage, CPUUsage, ${extractCloudType(
+| lookup [fetch dt.entity.host | fields entity.name, id, hosts, hypervisorType,osType, osVersion, cloudType, logicalCpuCores, physicalMemory, vendor=additionalSystemInfo[system.vendor], model=additionalSystemInfo[system.model]], sourceField:dt.entity.host, lookupField:id], sourceField:dt.entity.host, lookupField:dt.entity.host 
+| fields hostId=lookup.lookup.id, host=lookup.lookup.entity.name, os=lookup.lookup.osType, osVersion=lookup.lookup.osVersion, vendor=lookup.lookup.vendor, model=lookup.lookup.model,CPU=lookup.lookup.logicalCpuCores, Mem=(toDouble(lookup.lookup.physicalMemory) / ${gibibyte}), MemoryUsage=lookup.MemoryUsage, CPUUsage, ${extractCloudType(
     "CloudType",
     "lookup.lookup.cloudType"
   )}
