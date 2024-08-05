@@ -6,7 +6,7 @@ export const APP_NAME = "Rightsize";
 
 export const Home = () => {
   return (
-    <Flex flexDirection="column" alignItems="left" padding={32}>
+    <Flex flexDirection="column" alignItems="start" padding={32}>
       <CloudPage />
     </Flex>
   );

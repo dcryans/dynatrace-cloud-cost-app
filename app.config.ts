@@ -2,7 +2,7 @@ import type { CliOptions } from "dt-app";
 import packageJSON from "./package.json";
 
 const config: CliOptions = {
-  environmentUrl: "https://egu21862.apps.dynatrace.com/",
+  environmentUrl: "https://guu84124.apps.dynatrace.com/",
   icon: "./src/assets/icon.png",
   app: {
     name: "Rightsize",

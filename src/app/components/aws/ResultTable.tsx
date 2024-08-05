@@ -3,10 +3,13 @@ import {
   DataTable,
   Flex,
   FormField,
-  Highlight,
-  Text,
+  Label,
   TextInput,
 } from "@dynatrace/strato-components-preview";
+import {
+  Highlight,
+  Text,
+} from "@dynatrace/strato-components/typography";
 import Colors from "@dynatrace/strato-design-tokens/colors";
 import type { TableColumn } from "@dynatrace/strato-components-preview/tables";
 import { useEffectDebounced } from "../../hooks/useEffectDebounced";
@@ -111,7 +114,8 @@ export function ResultTable({ result }: ResultTableProps) {
     <Fragment>
       {isMultipleRows && (
         <Flex>
-          <FormField label="Host search">
+          <FormField>
+            <Label>Host search</Label>
             <TextInput defaultValue="" onChange={handleTextChanged} />
           </FormField>
         </Flex>

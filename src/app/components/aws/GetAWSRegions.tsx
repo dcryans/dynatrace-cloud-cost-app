@@ -42,7 +42,7 @@ export function GetAWSRegions({ setRegions, setRegion }: GetAWSRegionsProps) {
     }
     newRegions = addRegions(newRegions, DEFAULT_REGIONS);
     setRegions(newRegions);
-    setRegion([newRegion], true);
+    setRegion(newRegion, true);
   }, []);
 
   return (

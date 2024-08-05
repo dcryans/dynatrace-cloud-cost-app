@@ -25,7 +25,7 @@ export class Pricer {
     }
 
     this._prices = sortOsPrice(this._prices) as AWSPricingRecord[];
-    console.log(this._prices)
+    //console.log(this._prices)
 
     this._minPriceByOs = new MinPriceByOs(this._prices);
     this._targetUtilizationPct = 0

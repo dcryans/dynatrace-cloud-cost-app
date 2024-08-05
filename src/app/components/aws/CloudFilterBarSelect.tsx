@@ -1,11 +1,10 @@
 import React from "react";
-import { Select, SelectOption } from "@dynatrace/strato-components-preview";
-import { Mapper } from "../Mapper";
+import { SelectV2 } from "@dynatrace/strato-components-preview";
 
 interface CloudFilterBarSelectProps {
   name: string;
   handleSetValue: any;
-  defaultValue: any;
+  currentValue: any;
   valueList: any[];
   isDisabled?: boolean;
   isClearable?: boolean;
@@ -14,26 +13,29 @@ interface CloudFilterBarSelectProps {
 export function CloudFilterBarSelect({
   name,
   handleSetValue,
-  defaultValue,
+  currentValue,
   valueList,
   isDisabled = false,
   isClearable = false,
 }: CloudFilterBarSelectProps) {
+
+
   return (
-    <Mapper defaultValue={[defaultValue]} onChange={handleSetValue}>
-      <Select
-        defaultSelectedId={[defaultValue]}
+      <SelectV2
         name={name}
         id={`${name}-select`}
+        value={currentValue}
+        onChange={handleSetValue}
         disabled={isDisabled}
         clearable={isClearable}
       >
-        {valueList.map((item) => (
-          <SelectOption key={item} id={item}>
-            {item}
-          </SelectOption>
-        ))}
-      </Select>
-    </Mapper>
+        <SelectV2.Content>
+          {valueList.map((item) => (
+            <SelectV2.Option value={item} id={item}>
+              {item}
+            </SelectV2.Option>
+          ))}
+        </SelectV2.Content>
+      </SelectV2>
   );
 }

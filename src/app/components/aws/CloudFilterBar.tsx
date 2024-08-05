@@ -7,6 +7,8 @@ import { cloudTypeQuery } from "./queries/CloudQueries";
 
 interface AWSFilterBarProps {
   region: string;
+  cloudType: any,
+  targetUtil: any,
   handleSetRegion: any;
   handleSetTargetUtil: any;
   handleSetCloudType: any;
@@ -21,6 +23,8 @@ export const DEFAULT_CLOUD_TYPE = undefined;
 
 export function CloudFilterBar({
   region,
+  cloudType,
+  targetUtil,
   handleSetRegion,
   handleSetTargetUtil,
   handleSetCloudType,
@@ -59,7 +63,7 @@ export function CloudFilterBar({
           <FilterBar.Item name="Region" label="Region">
             <CloudFilterBarSelect
               name="region"
-              defaultValue={DEFAULT_REGION}
+              currentValue={region}
               handleSetValue={handleSetRegion}
               isDisabled={isLoadingAWSData}
               valueList={regions}
@@ -69,7 +73,7 @@ export function CloudFilterBar({
         <FilterBar.Item name="Target Utilization" label="Target Utilization">
           <CloudFilterBarSelect
             name="targetUtil"
-            defaultValue={DEFAULT_TARGET_UTIL}
+            currentValue={targetUtil}
             handleSetValue={handleSetTargetUtil}
             isDisabled={isLoadingAWSData}
             valueList={TARGET_UTIL_LIST}
@@ -79,7 +83,7 @@ export function CloudFilterBar({
           <FilterBar.Item name="Cloud Type" label="Cloud">
             <CloudFilterBarSelect
               name="cloudType"
-              defaultValue={DEFAULT_CLOUD_TYPE}
+              currentValue={cloudType}
               handleSetValue={handleSetCloudType}
               isDisabled={isLoadingAWSData}
               valueList={cloudTypes}

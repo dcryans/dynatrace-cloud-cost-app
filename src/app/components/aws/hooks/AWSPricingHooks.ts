@@ -148,7 +148,7 @@ export const useAWSPricingGet = (
       setStatus("loading");
       functions
         .call("get-aws-pricing", {
-          region,
+          data: region,
         })
         .then((result) => {
           setStatus("success");
@@ -195,7 +195,7 @@ export const useAWSPricingDocumentCreate = (
   );
 
   const createAWSPricingDocument = useCallback(
-    (records) => {
+    (records: any) => {
       if (records) {
         const blob = JSONObjectToBlob(records);
         execute({
@@ -232,7 +232,7 @@ export const useAWSPricingDocumentUpdate = (
   );
 
   const updateAWSPricingDocument = useCallback(
-    (region, outdatedDocumentInfo, records) => {
+    (region: any, outdatedDocumentInfo: any, records: any) => {
       if (records) {
         const blob = JSONObjectToBlob(records);
         execute({
@@ -261,7 +261,7 @@ export const useAWSPricingDocumentUpdate = (
 export const useAWSPricingDocumentGet = (id: string, setInstanceTypes: any) => {
   const { status, error, data, refetch } = useDocument(
     { id },
-    { autoFetch: false }
+    { autoFetch: false, autoFetchOnUpdate: true }
   );
 
   const statusInfo = useStatusInfo(

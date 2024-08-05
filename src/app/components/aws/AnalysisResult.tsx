@@ -11,12 +11,16 @@
 import React, { Fragment } from "react";
 import {
   Container,
-  Divider,
   Flex,
-  Heading,
   Markdown,
-  Text,
 } from "@dynatrace/strato-components-preview";
+import {
+  Heading,
+  Text,
+} from "@dynatrace/strato-components/typography";
+import {
+  Divider,
+} from "@dynatrace/strato-components/layouts";
 import { ResultTable } from "./ResultTable";
 import { AnalysisResults } from "./hooks/useAWSAnalysisResults";
 
@@ -27,7 +31,7 @@ interface AnalysisResultProps {
 const BLUE_LINE_MD =
   "![](data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAABy8AAAAMCAYAAADbJPG3AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAAEnQAABJ0Ad5mH3gAAACdSURBVHhe7dtBFcAgDETBUBtFA6KrDhf0gofsYeay8fBfRn37FAAAAAAAAECz5y4AAAAAAABAK/ESAAAAAAAAiCBeAgAAAAAAABHESwAAAAAAACCCeAkAAAAAAABEEC8BAAAAAACACOIlAAAAAAAAEGG8c517AwAAAAAAALTxeQkAAAAAAABEEC8BAAAAAACACOIlAAAAAAAAEKDqB2IIBAQ2TEouAAAAAElFTkSuQmCC)";
 
-export function AnalysisResult({awsAnalysisResults}: AnalysisResultProps) {
+export function AnalysisResult({ awsAnalysisResults }: AnalysisResultProps) {
 
   return (
     <Fragment>
@@ -64,6 +68,6 @@ export function AnalysisResult({awsAnalysisResults}: AnalysisResultProps) {
           </Container>
         </Fragment>
       )}
-      </Fragment>
+    </Fragment>
   );
 }
